@@ -1,0 +1,20 @@
+---
+- name: Ensure Private Network Interface Exists
+  azure_rm_networkinterface:
+    tenant: "{{ azure_tenant_id }}"
+    subscription_id: "{{ azure_subscription_id }}"
+    client_id: "{{ azure_client_id }}"
+    secret: "{{ azure_client_secret }}"
+    tags: "{{ az_tags_dict }}"
+    resource_group: "{{ app_location_id }}-{{ app_subscription_id }}-{{ app_environment_id }}-Rsg-{{ app_description }}-{{ app_increment }}"
+    location: "{{ app_rsg_location }}"
+    state: "present"
+    name: "{{ nic_item.name }}-nic-{{ '%02d'|format(index +1|int) }}"
+    virtual_network_name: "/subscriptions/{{ lookup('env','AZ_SUBSCRIPTION_ID_RDI') }}/resourceGroups/{{ app_location_id }}-{{ app_subscription_id }}-{{ app_environment_id }}-Rsg-Ntwk-{{ net_increment }}/providers/Microsoft.Network/virtualNetworks/{{ app_location_id }}-{{ app_subscription_id }}-{{ app_environment_id }}-Vnet-{{ net_increment }}"
+    subnet_name: "{{ app_location_id }}-{{ app_subscription_id }}-{{ app_environment_id }}-Snt-{{ app_description }}-{{ app_increment }}"
+    tags: "{{ az_tags_dict }}"
+    ip_configurations:
+      - name: ipconfig1
+        primary: True
+    security_group_name: "{{ app_location_id }}-{{ app_subscription_id }}-{{ app_environment_id }}-Nsg-{{ app_description }}-{{ app_increment }}"
+...
